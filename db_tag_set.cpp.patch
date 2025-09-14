@@ -1,0 +1,18 @@
+--- db_tag_set.cpp	2025-09-07 15:31:01.045676881 -0500
++++ db_tag_set.cpp.new	2025-09-04 23:52:03.563996019 -0500
+@@ -83,12 +83,12 @@
+ # include "m_utility.h"
+ 
+ TagSet::TagSet(TagSet&& set)
+-	:m_values(mstl::move(set.m_values))
+-	,m_extra(mstl::move(set.m_extra))
++	:m_extra(mstl::move(set.m_extra))
+ 	,m_isUserSupplied(set.m_isUserSupplied)
+ 	,m_set(mstl::move(set.m_set))
+ {
+-	::memcpy(m_significance, set.m_significance, sizeof(m_significance));
++	::memcpy(m_values, set.m_values, sizeof(m_values));
++   ::memcpy(m_significance, set.m_significance, sizeof(m_significance));
+ }
+ 
+ 

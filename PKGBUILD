@@ -37,6 +37,10 @@ source=('scidb-svn::svn://svn.code.sf.net/p/scidb/code/trunk'
         'engines.Sjeng.Makefile.patch'
         'sys_info.cpp.patch'
         'tcl.Makefile.patch'
+        'agg_font_freetype.cpp.patch'
+        'db_tag_set.cpp.patch'
+        'html.h.patch'
+        'src_Makefile.patch'
         )
 md5sums=('SKIP'
          '3dd938a3a7f744813ccb76fe4826d167'
@@ -59,12 +63,24 @@ prepare() {
   rm $srcdir/$pkgname/src/sys/sys_info.cpp
   rm $srcdir/$pkgname/engines/Sjeng/Makefile
   rm $srcdir/$pkgname/tcl/Makefile
+  rm $srcdir/$pkgname/src/tk/svg/agg/agg_font_freetype.cpp 
+  rm $srcdir/$pkgname/src/tk/html/html.h
+  rm $srcdir/$pkgname/src/db/db_tag_set.cpp 
+#  rm $srcdir/$pkgname/src/Makefile
   # 2 refresh from repo
   cd $srcdir/$pkgname
   svn update
 }
 
 build() {
+  # Patch compile-time race condition
+      #patch --verbose -u $srcdir/$pkgname/src/Makefile -i src_Makefile.patch
+      #sleep 10
+
+  # Patches for gcc-14
+  patch -u $srcdir/$pkgname/src/tk/svg/agg/agg_font_freetype.cpp -i agg_font_freetype.cpp.patch
+  patch -u $srcdir/$pkgname/src/tk/html/html.h -i html.h.patch
+  patch -u $srcdir/$pkgname/src/db/db_tag_set.cpp -i db_tag_set.cpp.patch
   # 3 Patch files
   patch -u $srcdir/$pkgname/configure -i configure.patch
   patch -u $srcdir/$pkgname/src/dump_eco.cpp -i dump_eco.cpp.patch
@@ -97,7 +113,9 @@ build() {
   SWITCHES+=("--suppress-insane-message")
 #  SWITCHES+=("")
 #  SWITCHES+=("")
+  SWITCHES+=("--gcc-version=14")
   SWITCHSTRING=""
+
   for SWITCH in "${SWITCHES[@]}" ; do
     SWITCHSTRING="${SWITCHSTRING} ${SWITCH}"
   done
