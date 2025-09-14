@@ -27,6 +27,7 @@ makedepends=(
            # needed for build purposes
            'patch'
            'subversion'
+           'gcc14'
             )
 conflicts=('scidb')
 #options=('!buildflags' '!makeflags' '!debug' )
@@ -120,7 +121,7 @@ build() {
     SWITCHSTRING="${SWITCHSTRING} ${SWITCH}"
   done
   export CFLAGS="-fcommon" CXXFLAGS="-fcommon" ; ./configure ${SWITCHSTRING}
-  make
+  make -j1
 }
 
 package() {
