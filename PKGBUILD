@@ -41,7 +41,6 @@ source=('scidb-svn::svn://svn.code.sf.net/p/scidb/code/trunk'
         'agg_font_freetype.cpp.patch'
         'db_tag_set.cpp.patch'
         'html.h.patch'
-        'src_Makefile.patch'
         )
 md5sums=('SKIP'
          '3dd938a3a7f744813ccb76fe4826d167'
@@ -49,6 +48,9 @@ md5sums=('SKIP'
          '68c9d47e5af84ac25c87045e3388c6f1'
          'ef91ffeceab48c260bb1c2af7d02cd9c'
          'a2025bd063a9f18615dba96c09e3bc99'
+         '78f9ee79b156aed3da5ff5a32d5238d8'
+         'aab82661400bc4c5e72b231e54b29129'
+         'f62e102d58ea156eb1a23dc4aae890f2'
         )
 pkgver() {
   cd $srcdir/$pkgname
