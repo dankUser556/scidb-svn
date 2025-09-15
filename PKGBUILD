@@ -2,7 +2,7 @@
 # Contributor: Original submitter q9 <qqqqqqqqq9 at web dot de>
 pkgname=scidb-svn
 pkgver=1.0.beta.r1531
-pkgrel=7
+pkgrel=8
 # epoch=2
 pkgdesc="Chess database browser: chess, chess960, etc engines; import Chessbase, PGN, Scid; CQL"
 arch=('x86_64' 'i686')
