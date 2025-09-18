@@ -1,8 +1,14 @@
 # Maintainer: 2022-04-04 blacktav <blacktav at gmail dot com>
-# Contributor: Original submitter q9 <qqqqqqqqq9 at web dot de>
+# Co-Maintainer: 2025-09-17 dankuser <dperez388 at gmail dot com>
+# Contributors: Original submitter q9 <qqqqqqqqq9 at web dot de>
+
 pkgname=scidb-svn
 pkgver=1.0.beta.r1531
+<<<<<<< HEAD
 pkgrel=8
+=======
+pkgrel=10
+>>>>>>> 3624dc3 (mirror current aur pkgrel 10)
 # epoch=2
 pkgdesc="Chess database browser: chess, chess960, etc engines; import Chessbase, PGN, Scid; CQL"
 arch=('x86_64' 'i686')
@@ -28,6 +34,7 @@ makedepends=(
            'patch'
            'subversion'
            'gcc14'
+           'gcc14-libs'
             )
 conflicts=('scidb')
 #options=('!buildflags' '!makeflags' '!debug' )
@@ -43,14 +50,14 @@ source=('scidb-svn::svn://svn.code.sf.net/p/scidb/code/trunk'
         'html.h.patch'
         )
 md5sums=('SKIP'
-         '3dd938a3a7f744813ccb76fe4826d167'
+         '0890bf5963e14ba39734608edd43cf27'
          '47f44f0eec5d9e0a9e7e1bb25adea3b4'
          '68c9d47e5af84ac25c87045e3388c6f1'
          'ef91ffeceab48c260bb1c2af7d02cd9c'
          'a2025bd063a9f18615dba96c09e3bc99'
-         '78f9ee79b156aed3da5ff5a32d5238d8'
-         'aab82661400bc4c5e72b231e54b29129'
-         'f62e102d58ea156eb1a23dc4aae890f2'
+         '386b2c4f924df42a3326fc798cd44a4f'
+         'a0c2dfe24315ae6f6b163568686d3b69'
+         'b3c0437c06eb996e928c3301e35cf1db'
         )
 pkgver() {
   cd $srcdir/$pkgname
@@ -69,27 +76,22 @@ prepare() {
   rm $srcdir/$pkgname/src/tk/svg/agg/agg_font_freetype.cpp 
   rm $srcdir/$pkgname/src/tk/html/html.h
   rm $srcdir/$pkgname/src/db/db_tag_set.cpp 
-#  rm $srcdir/$pkgname/src/Makefile
   # 2 refresh from repo
   cd $srcdir/$pkgname
   svn update
 }
 
 build() {
-  # Patch compile-time race condition
-      #patch --verbose -u $srcdir/$pkgname/src/Makefile -i src_Makefile.patch
-      #sleep 10
-
-  # Patches for gcc-14
-  patch -u $srcdir/$pkgname/src/tk/svg/agg/agg_font_freetype.cpp -i agg_font_freetype.cpp.patch
-  patch -u $srcdir/$pkgname/src/tk/html/html.h -i html.h.patch
-  patch -u $srcdir/$pkgname/src/db/db_tag_set.cpp -i db_tag_set.cpp.patch
   # 3 Patch files
   patch -u $srcdir/$pkgname/configure -i configure.patch
   patch -u $srcdir/$pkgname/src/dump_eco.cpp -i dump_eco.cpp.patch
   patch -u $srcdir/$pkgname/src/sys/sys_info.cpp -i sys_info.cpp.patch
   patch -u $srcdir/$pkgname/engines/Sjeng/Makefile -i engines.Sjeng.Makefile.patch
   patch -u $srcdir/$pkgname/tcl/Makefile -i tcl.Makefile.patch
+   # GCC-14 compatability patches
+  patch -u $srcdir/$pkgname/src/tk/svg/agg/agg_font_freetype.cpp -i agg_font_freetype.cpp.patch
+  patch -u $srcdir/$pkgname/src/db/db_tag_set.cpp -i db_tag_set.cpp.patch
+  patch -u $srcdir/$pkgname/src/tk/html/html.h -i html.h.patch
   # Set switches for configure script
   # Default switches had debugging turned on
   #     deployment is below /usr/local/bin
@@ -113,20 +115,25 @@ build() {
 #  SWITCHES+=("--enable-gprof-profiling=yes")    # default=no
 #  SWITCHES+=("--enable-gcov-coverage=yes")      # default=no
 #  SWITCHES+=("--enable-inline-text=no")         # default=yes
-  SWITCHES+=("--suppress-insane-message")
-#  SWITCHES+=("")
-#  SWITCHES+=("")
-  SWITCHES+=("--gcc-version=14")
+#  SWITCHES+=("--suppress-insane-message")      # This doesn't work
+  SWITCHES+=("--gcc-version=14")                # gcc15 too intolerant of old code
   SWITCHSTRING=""
-
   for SWITCH in "${SWITCHES[@]}" ; do
     SWITCHSTRING="${SWITCHSTRING} ${SWITCH}"
   done
   export CFLAGS="-fcommon" CXXFLAGS="-fcommon" ; ./configure ${SWITCHSTRING}
-  make -j1
+  
+   # Compile a few objects early. This seems to be some kind of
+   # issue with using multiple threads or with how autotools 
+   # was implemented in the original tarball.
+  for OBJECT in mstl tcl sys app db util/universalchardet tk/text tk/tkdnd tk; do
+    make -j$(nproc) -C src/${OBJECT}
+  done;
+  make -j$(nproc)
 }
 
 package() {
   cd $srcdir/$pkgname
   make install
 }
+

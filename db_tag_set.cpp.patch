@@ -1,18 +1,12 @@
---- db_tag_set.cpp	2025-09-07 15:31:01.045676881 -0500
-+++ db_tag_set.cpp.new	2025-09-04 23:52:03.563996019 -0500
-@@ -83,12 +83,12 @@
+--- src/scidb-svn/src/db/db_tag_set.cpp	2025-09-14 12:56:26.203835415 +0200
++++ src.base/scidb-svn/src/db/db_tag_set.cpp	2025-09-14 13:59:19.326769189 +0200
+@@ -83,8 +83,7 @@
  # include "m_utility.h"
  
  TagSet::TagSet(TagSet&& set)
 -	:m_values(mstl::move(set.m_values))
 -	,m_extra(mstl::move(set.m_extra))
-+	:m_extra(mstl::move(set.m_extra))
++    :m_extra(mstl::move(set.m_extra))
  	,m_isUserSupplied(set.m_isUserSupplied)
  	,m_set(mstl::move(set.m_set))
  {
--	::memcpy(m_significance, set.m_significance, sizeof(m_significance));
-+	::memcpy(m_values, set.m_values, sizeof(m_values));
-+   ::memcpy(m_significance, set.m_significance, sizeof(m_significance));
- }
- 
- 

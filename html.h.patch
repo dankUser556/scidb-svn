@@ -1,5 +1,5 @@
---- html.h	2025-09-07 15:30:40.627036020 -0500
-+++ html.h.new	2025-09-04 23:51:17.182773607 -0500
+--- src/scidb-svn/src/tk/html/html.h	2025-09-14 12:56:24.888354499 +0200
++++ src.base/scidb-svn/src/tk/html/html.h	2025-09-14 14:03:15.062215443 +0200
 @@ -864,7 +864,7 @@
  
  void HtmlFloatListAdd(HtmlFloatList*, int, int, int, int);
