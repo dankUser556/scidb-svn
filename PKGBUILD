@@ -4,11 +4,7 @@
 
 pkgname=scidb-svn
 pkgver=1.0.beta.r1531
-<<<<<<< HEAD
-pkgrel=8
-=======
 pkgrel=10
->>>>>>> 3624dc3 (mirror current aur pkgrel 10)
 # epoch=2
 pkgdesc="Chess database browser: chess, chess960, etc engines; import Chessbase, PGN, Scid; CQL"
 arch=('x86_64' 'i686')
